@@ -1,0 +1,347 @@
+Disk Scheduling
+
+#include<stdio.h>
+#include<stdlib.h>
+void FCFS(int nr,int b[],int h){
+	int tsum=0,sum=0;
+	float avg=0;
+	for(int i=0;i<nr;i++){
+		tsum=abs(b[i]-h);
+		sum=sum+tsum;
+		h=b[i];
+	}
+	avg=(float)sum/nr;
+	printf("\nTotal Head movements = %d\n",sum);
+	printf("Average head movements = %f\n",avg);
+}
+void SCAN(int nr,int arr[],int h,int n){
+	int tsum=0,sum=0,temp=0,i,sn,k,d;
+	float avg=0;
+	sn=nr+1;
+	for(i=0;i<=nr+2;i++){
+		for(int j=0;j<=nr-i-1+2;j++){
+			if(arr[j]>arr[j+1]){
+				temp=arr[j];
+				arr[j]=arr[j+1];
+				arr[j+1]=temp;
+			}
+		}
+	}
+	for(i=0;i<=nr+2;i++){
+		if(arr[i]==h){
+			k=i;
+		}
+	}
+	printf("\n1.Left\n2.Right\nSelect which direction to traverse:");
+	scanf("%d",&d);
+	if(d==1){
+		for(i=k-1;i>=0;i--){
+			if(sn!=0){
+				tsum=abs(arr[i]-h);
+				sum=sum+tsum;
+				h=arr[i];
+				sn--;
+			}
+		}
+		for(i=k+1;i<=nr+2;i++){
+			if(sn!=0){
+				tsum=abs(arr[i]-h);
+				sum=sum+tsum;
+				h=arr[i];
+				sn--;
+			}
+		}
+	}else if(d==2){
+	for(i=k+1;i<=nr+2;i++){
+		if(sn!=0){
+			tsum=abs(arr[i]-h);
+sum=sum+tsum;
+h=arr[i];
+sn--;
+}
+}
+for(i=k-1;i>=0;i--){
+if(sn!=0){
+tsum=abs(arr[i]-h);
+sum=sum+tsum;
+h=arr[i];
+sn--;
+}
+}
+}else{
+printf("Invalid option");
+return;
+}
+avg=(float)sum/nr;
+printf("\nTotal Head movements = %d\n",sum);
+printf("Average head movements = %f\n",avg);
+}
+void CSCAN(int nr,int arr[],int h,int n){
+int tsum=0,sum=0,temp=0,i,sn,k,d;
+float avg=0;
+sn=nr+2;
+for(i=0;i<=nr+2;i++){
+for(int j=0;j<=nr-i-1+2;j++){
+if(arr[j]>arr[j+1]){
+temp=arr[j];
+arr[j]=arr[j+1];
+arr[j+1]=temp;
+}
+}
+}
+for(i=0;i<=nr+2;i++){
+if(arr[i]==h){
+k=i;
+}
+}
+printf("\n1.Left\n2.Right\nSelect which direction to traverse:");
+scanf("%d",&d);
+if(d==1){
+for(i=k-1;i>=0;i--){
+if(sn!=0){
+tsum=abs(arr[i]-h);
+sum=sum+tsum;
+h=arr[i];
+sn--;
+}
+}
+for(i=nr+2;i>k;i--){
+if(sn!=0){
+tsum=abs(arr[i]-h);
+sum=sum+tsum;
+h=arr[i];
+sn--;
+}
+}
+}else if(d==2){
+for(i=k+1;i<=nr+2;i++){
+if(sn!=0){
+tsum=abs(arr[i]-h);
+sum=sum+tsum;
+h=arr[i];
+sn--;
+}
+}
+for(i=0;i<k;i++){
+if(sn!=0){
+tsum=abs(arr[i]-h);
+sum=sum+tsum;
+h=arr[i];
+sn--;
+}
+}
+}else{
+printf("Invalid option");
+return;
+}
+avg=(float)sum/nr;
+printf("\nTotal Head movements = %d\n",sum);
+printf("Average head movements = %f\n",avg);
+}
+void main(){
+int nr,h,arr[20],n,ch,b[20];
+printf("Enter the No:of Cylinders:");
+scanf("%d",&n);
+printf("Enter no of requests:");
+scanf("%d",&nr);
+printf("Enter the request list:");
+for(int i=0;i<nr;i++){
+scanf("%d",&arr[i]);
+}
+for(int i=0;i<nr;i++){
+b[i]=arr[i];
+}
+printf("Enter the initial head position:");
+scanf("%d",&h);
+arr[nr]=h;
+arr[nr+1]=n-1;
+arr[nr+2]=0;
+do{
+printf("\n---------------------------\n1:FCFS\n2:SCAN\n3:CSCAN\n4:EXIT\nPlease
+Enter your choice:");
+scanf("%d",&ch);
+switch(ch){
+case 1: FCFS(nr,b,h);
+break;
+case 2: SCAN(nr,arr,h,n);
+break;
+case 3: CSCAN(nr,arr,h,n);
+break;
+case 4: printf("Exiting....");
+break;
+default: printf("Invalid Option");
+break;
+}
+}while(ch!=4);
+}
+
+
+Paging
+
+#include <stdio.h>
+void main() {
+	int memsize=15;
+	int pagesize,nofpage,p[100],frameno;
+	int offset,i,logadd,phyadd,choice=0;
+	printf("Your memsize is: %d",memsize);
+	printf("\nEnter page size:");
+	scanf("%d",&pagesize);
+	nofpage=memsize/pagesize;
+	printf("\nNo of pages available is: %d",nofpage);
+	for(i=0;i<nofpage;i++){
+		printf("\nEnter the frame of page %d: ",i);
+		scanf("%d",&p[i]);
+	}
+	do{
+		printf("\nEnter a logical address:");
+		scanf("%d",&logadd);
+		frameno=logadd/pagesize;
+		offset=logadd%pagesize;
+		phyadd=(p[frameno]*pagesize)+offset;
+		printf("\nPhysical address is %d",phyadd);
+		printf("\nDo you want to continue(1/0)?:");
+		scanf("%d",&choice);
+	}
+	while(choice==1);
+}
+
+
+
+Seq
+
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+struct file
+{
+	char name[20];
+	int sb,nob;
+}f[30];
+
+void main()
+{
+	int i,j,n,ch;
+	char s[20];
+	
+	printf("enter no.of files:");
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
+	{
+		printf("\nenter file name%d:",i+1);
+		scanf("%s",f[i].name);
+		printf("enter starting block of file%d:",i+1);
+		scanf("%d",&f[i].sb);
+		printf("enter no of block of file%d:",i+1);
+		scanf("%d",&f[i].nob);
+	}
+	while(1)
+	{
+		printf("\n1.Search\n2.Exit\n");
+		printf("\nenter choice:");
+		scanf("%d",&ch);
+		switch(ch)
+		{
+		case 1:
+			printf("\nenter the file name to be searched:");
+			scanf("%s",s);
+			
+			for(i=0;i<n;i++)
+			{
+				if(!strcmp(s,f[i].name))
+				{
+					break;
+				}
+			}
+			if(i==n)
+			{
+				printf("not found");
+			}
+			else
+			{
+				printf("\nFile name\tsb\tnob\tblocks occupied\n");
+				printf("%s\t\t%d\t%d\t",f[i].name,f[i].sb,f[i].nob);
+				for(j=0;j<f[i].nob;j++)
+				{
+					printf("%d ",f[i].sb+j);
+				}
+			}
+			break;
+		case 2:
+				printf("Exiting...\n");
+				exit(0);
+		default:
+				printf("enter valid option");
+		}
+	}
+}
+
+
+
+Indexed
+
+struct file
+{
+	char name[20];
+	int block[30],nob;
+}f[30];
+
+void main()
+{
+	int i,j,n,ch;
+	char s[20];
+	
+	printf("enter no.of files:");
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
+	{
+		printf("\nenter file name%d:",i+1);
+		scanf("%s",f[i].name);
+		printf("enter no of block of file%d:",i+1);
+		scanf("%d",&f[i].nob);
+		printf("enter block of file%d:",i+1);
+		for(j=0;j<f[i].nob;j++)
+		{
+			scanf("%d",&f[i].block[j]);
+		}
+	}
+	while(1)
+	{
+		printf("\n1.Search\n2.Exit\n");
+		printf("\nenter choice:");
+		scanf("%d",&ch);
+		switch(ch)
+		{
+		case 1:
+			printf("\nenter the file name to be searched:");
+			scanf("%s",s);
+			
+			for(i=0;i<n;i++)
+			{
+				if(!strcmp(s,f[i].name))
+				{
+					break;
+				}
+			}
+			if(i==n)
+			{
+				printf("not found");
+			}
+			else
+			{
+				printf("\nFile name\tnob\tblocks occupied\n");
+				printf("%s\t\t%d\t",f[i].name,f[i].nob);
+				for(j=0;j<f[i].nob;j++)
+				{
+					printf("%d ",f[i].block[j]);
+				}
+			}
+			break;
+		case 2:
+				printf("Exiting...\n");
+				exit(0);
+		default:
+				printf("enter valid option");
+		}
+	}
+}

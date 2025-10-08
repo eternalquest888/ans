@@ -1,0 +1,272 @@
+largest/smallest
+
+mov cl,05h
+mov si,8000h
+mov bl,0ffh
+mov bh,00h
+l1:mov al,[si]
+	cmp al,bh
+	jc s1
+	mov bh,al
+s1:cmp al,bl
+	jnc s2
+	mov bl,al
+s2:inc si
+	dec cl
+	jnz 11
+mov [9000h],bl
+mov [9001h],bh
+hlt
+
+
+sorting
+
+mov bl,05h
+mov si,8000h
+mov cl,bl
+l2:mov ch,bl
+mov di,si
+l1:mov ah, [di]
+inc di
+mov al, [di]
+cmp al,ah
+jnc s1
+mov dl,ah
+mov ah,al
+mov al,dl
+mov [di-1],ah
+mov[di],al
+s1:dec ch
+jnz 11
+dec cl
+jnz 12
+hlt
+
+
+searching
+
+mov cl,05h
+mov si,8000h
+mov bl,05h
+l1:mov al,[si]
+ cmp al,bl
+ jz l2
+ inc si
+ loop l1
+ jmp notfound
+l2:mov [9000h],01
+ hlt
+notfound:mov [9000h],00h
+hlt
+
+
+prime or not
+
+DATA SEGMENT
+ num DB 7H
+ str1 DB 'Number is prime$,0'
+ str2 DB 'Number is not prime$,0'
+ CODE SEGMENT
+ ASSUME DS:DATA,CS:CODE
+ START: MOV AX,DATA
+ MOV DS,AX
+ MOV AL,num
+ CMP AL,2
+ JE prime
+ JB notprime
+ mov BL,2
+ checkprime:MOV AL,NUM
+ MOV AH,0
+ DIV BL
+ CMP AH,0
+ JE notprime
+ INC BL
+ MOV AL,num
+ CMP BL,AL
+ JL checkprime
+ prime:LEA DX,str1
+ mov ah,09h
+ int 21h
+ jmp endprogram
+ notprime:LEA DX,str2
+ MOV AH,09H
+ INT 21H
+ endprogram:HLT
+ END START
+
+
+palindrome
+
+DATA SEGMENT
+STR1 DB "MALAYALAM$"
+PAL DB "PALINDROME$"
+NPAL DB "NOT PALINDROME$"
+ENDS
+ASSUME CS:CODE,DS: DATA
+START:
+MOV AX, DATA
+MOV DS,AX
+LEA SI,STR1
+MOV CL,000H
+L1:MOV AL, [SI]
+ CMP AL,"$"
+ JE L2
+ INC SI
+ INC CX
+ JMP L1
+L2:DEC CX
+ LEA SI,STR1
+ ADD SI,CX
+ MOV DI,000H
+L3:MOV AL,[SI]
+ MOV BL,[STR1+DI]
+ CMP AL,BL
+ JNE NOTPALIN
+ DEC SI
+ INC DI
+ CMP DI,CX
+ JGE ISPALIN
+ JMP L3
+ISPALIN: LEA DX,PAL
+ JMP OUTPUT
+NOTPALIN:LEA DX,NPAL
+ OUTPUT:MOV AH,09H
+ INT 21H
+EXIT:MOV AX,4C00H
+ INT 21H
+ ENDS
+END START
+
+
+length of the string
+
+DATA SEGMENT
+ myString DB "HelloHI$"
+DATA ENDS
+CODE SEGMENT
+ ASSUME CS:CODE, DS:DATA
+START:
+ MOV AX, DATA
+ MOV DS, AX
+
+ LEA SI, myString
+ MOV CX, 0
+NEXT_CHAR:
+ MOV AL, [SI]
+ CMP AL, '$'
+ JE DONE
+ INC CX
+ INC SI
+ JMP NEXT_CHAR
+DONE:
+ MOV AH, 4CH
+ INT 21H
+CODE ENDS
+END START
+
+
+even/odd count
+
+MOV SI, 8000H
+MOV BL, 02H
+MOV BH, 00H
+MOV CH, 00H
+MOV CL, 05H
+L2: MOV AL, [SI]
+ MOV AH, 00H
+ DIV BL
+ CMP AH, 00H
+ JNZ L1
+ INC BH
+ JMP L3
+L1: INC CH
+L3: INC SI
+ DEC CL
+ JNZ L2
+MOV DL, BH
+MOV DH, CH
+HLT
+
+
+factorial
+
+MOV BH, [8000H]
+MOV AL, 01H
+L1: MUL BH
+ DEC BH
+ CMP BH, 01H
+ JNZ L1
+MOV [8000H], AL
+HLT
+
+
+sum of n numbers
+
+MOV CL, [8000H]
+MOV SI, 8001H
+MOV AL, 00H
+L1: ADD AL, [SI]
+ INC SI
+ DEC CL
+ JNZ L1
+MOV [9000H], AL
+HLT
+
+
+8 bit arithmetic operations
+
+ Addition (8-bit)
+MOV AL, 25H
+MOV BL, 15H
+ADD AL, BL
+MOV [9000H], AL
+HLT
+ Subtraction (8-bit)
+MOV AL, 25H
+MOV BL, 15H
+SUB AL, BL
+MOV [9001H], AL
+HLT
+ Multiplication (8-bit)
+MOV AL, 25H
+MOV BL, 15H
+MUL BL
+MOV [9002H], AL
+HLT
+ Division (8-bit)
+MOV AL, 25H
+MOV BL, 05H
+DIV BL
+MOV [9003H], AL
+MOV [9004H], AH
+HLT
+
+
+16 bit arithmetic operations
+
+ Addition (16-bit)
+MOV AX, 1234H
+MOV BX, 1111H
+ADD AX, BX
+MOV [9004H], AX
+HLT
+ Subtraction (16-bit)
+MOV AX, 1234H
+MOV BX, 1111H
+SUB AX, BX
+MOV [9006H], AX
+HLT
+Multiplication (16-bit)
+MOV AX, 0005H
+MOV BX, 0003H
+MUL BX
+MOV [9008H], AX
+MOV [9009H], DX
+HLT
+Division (16-bit)
+MOV AX, 0010H
+MOV BX, 0002H
+DIV BX
+MOV [9005H], AX
+MOV [9007H], DX
+HLT
