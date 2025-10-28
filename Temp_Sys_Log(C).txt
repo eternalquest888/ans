@@ -1,3 +1,83 @@
+Pass one
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    FILE *f1, *f2, *f3, *f4;
+    char lab[30], opcode[30], opa[30];
+    char opcode1[30], opa1[30];
+    int locctr = 0, found;
+
+    f1 = fopen("input.txt", "r");
+    f2 = fopen("opcode.txt", "r");
+    f3 = fopen("output.txt", "w");
+    f4 = fopen("symtab.txt", "w");
+
+    if (!f1 || !f2 || !f3 || !f4) {
+        printf("Error opening files!\n");
+        return 1;
+    }
+
+    while (fscanf(f1, "%s%s%s", lab, opcode, opa) == 3) {
+        // Handle END
+        if (strcmp(opcode, "END") == 0) {
+            fprintf(f3, "\n%d %s %s %s", locctr, lab, opcode, opa);
+            break;
+        }
+
+        // Handle START
+        if (strcmp(opcode, "START") == 0) {
+            locctr = atoi(opa);
+            fprintf(f3, "%s %s %s", lab, opcode, opa);
+            continue;
+        }
+
+        found = 0;
+        rewind(f2);
+
+        // Search opcode table
+        while (fscanf(f2, "%s%s", opcode1, opa1) == 2) {
+            if (strcmp(opcode, opcode1) == 0) {
+                found = 1;
+                break;
+            }
+        }
+
+        // Write to SYMTAB if label exists
+        if (strcmp(lab, "**") != 0) {
+            fprintf(f4, "%s %d\n", lab, locctr);  // Label first, then LOCCTR
+        }
+
+        // Write to intermediate file
+        fprintf(f3, "\n%d %s %s %s", locctr, lab, opcode, opa);
+
+        // Update LOCCTR
+        if (found) {
+            locctr += 3;
+        } else if (strcmp(opcode, "WORD") == 0) {
+            locctr += 3;
+        } else if (strcmp(opcode, "RESW") == 0) {
+            locctr += 3 * atoi(opa);
+        } else if (strcmp(opcode, "RESB") == 0) {
+            locctr += atoi(opa);
+        } else if (strcmp(opcode, "BYTE") == 0) {
+            locctr += strlen(opa)-3; // Simplified: assumes 1 byte
+        }
+    }
+
+    fclose(f1);
+    fclose(f2);
+    fclose(f3);
+    fclose(f4);
+
+    printf("✅ Pass 1 completed successfully.\n");
+    printf("Check 'output.txt' and 'symtab.txt'.\n");
+    return 0;
+}
+
+
 Disk Scheduling
 
 #include<stdio.h>
@@ -345,4 +425,5 @@ void main()
 		}
 	}
 }
+
 
